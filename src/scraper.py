@@ -30,9 +30,10 @@ def scrape_product_data():
         driver.execute_script("document.querySelectorAll('.a-icon-star-small').forEach(function(e) { e.removeAttribute('aria-hidden'); })")
 
         # Extract products details
-        titles = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "a-size-base-plus"))) # Product Names
-        prices = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "a-price-whole"))) # Prices
-        ratings = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "a-icon-alt"))) # Ratings
+        titles = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".a-size-base-plus.a-spacing-none.a-color-base.a-text-normal"))) # Product Names
+        price_whole = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".a-price-whole"))) # Prices
+        price_cents = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".a-price-fraction")))
+        ratings = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".a-icon-alt"))) # Ratings
        # num_rantings = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "a-icon-alt"))) # Ratings
 
         # Create a list to store the data
@@ -41,7 +42,7 @@ def scrape_product_data():
         # Loop through the product listings and store the data
         for i in range(len(titles)):
             title = titles[i].text
-            price = prices[i].text if i < len(prices) else "N/A"
+            price = f"{price_whole[i].text}.{price_cents[i].text}" if i < len(price_whole) and i < len(price_cents) else "N/A"
             rating = ratings[i].text if i < len(ratings) else "N/A"
             product_data.append([title, price, rating])
 
@@ -49,6 +50,7 @@ def scrape_product_data():
         driver.quit()
 
         # Return fetched data
+        print(product_data)
         return product_data
     
     except TimeoutException as e:
@@ -65,3 +67,4 @@ def scrape_product_data():
 
     return None # Return None if an error occurs
         
+scrape_product_data()
