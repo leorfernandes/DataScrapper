@@ -11,7 +11,10 @@ SELECTORS = {
 # Timeout to load the page
 TIMEOUT = 10
 
-# Recipient Email
+# Directory to save the CSV file
 CSV_FILE_PATH = "../data/product_data.csv"
+
+# Directory to save the log files
+LOG_DIRECTORY = "../logs"
 
 
