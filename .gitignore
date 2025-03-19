@@ -2,4 +2,4 @@
 src/venv/
 
 # Ignore Python cache directories
-src/__pychache__/
+src/_pychache_/
