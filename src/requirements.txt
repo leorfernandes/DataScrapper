@@ -1,0 +1,4 @@
+# For Scrapping
+Selenium
+Webdriver_manager
+Pandas

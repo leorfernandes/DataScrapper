@@ -1,16 +1,14 @@
-# Import Selenium 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
+# Description: This file contains the main function that scrapes the product data from the Amazon website.
+from selenium import webdriver # Import the webdriver module from the selenium library
+from selenium.webdriver.common.by import By # Import the By class from the selenium library
 
-# Import Error handling
-from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, NoSuchElementException, WebDriverException # Import the exceptions from the selenium library
+from selenium.webdriver.support.ui import WebDriverWait # Import the WebDriverWait class from the selenium library
+from selenium.webdriver.support import expected_conditions as EC # Import the expected_conditions module from the selenium library
 
-# Imported variables and functions from files
-from error_handler import log_error
-from config import URL
-from driver_config import get_driver
+from error_handler import log_error # Import the log_error function from error_handler.py
+from config import URL, TIMEOUT, SELECTORS # Import the URL, TIMEOUT, and SELECTORS variables from config.py
+from driver_config import get_driver # Import the get_driver function from driver_config.py
 
 def scrape_product_data():
     # Opens the URL and returns the requested elements
@@ -20,21 +18,19 @@ def scrape_product_data():
         driver = get_driver()
 
         # Set wait time
-        wait = WebDriverWait(driver, 10)
+        wait = WebDriverWait(driver, TIMEOUT)
 
         # Navigate to Webpage
         driver.get(URL)
-        driver.set_page_load_timeout(10)
+        driver.set_page_load_timeout(TIMEOUT)
 
         # Access ratings hidden
         driver.execute_script("document.querySelectorAll('.a-icon-star-small').forEach(function(e) { e.removeAttribute('aria-hidden'); })")
 
         # Extract products details
-        titles = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".a-size-base-plus.a-spacing-none.a-color-base.a-text-normal"))) # Product Names
-        price_whole = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".a-price-whole"))) # Prices
-        price_cents = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".a-price-fraction")))
-        ratings = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, ".a-icon-alt"))) # Ratings
-       # num_rantings = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "a-icon-alt"))) # Ratings
+        titles = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, SELECTORS["title"]))) # Product Names
+        price_whole = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, SELECTORS["price_whole"]))) # Prices
+        price_cents = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, SELECTORS["price_cents"])))
 
         # Create a list to store the data
         product_data = []
@@ -43,14 +39,12 @@ def scrape_product_data():
         for i in range(len(titles)):
             title = titles[i].text
             price = f"{price_whole[i].text}.{price_cents[i].text}" if i < len(price_whole) and i < len(price_cents) else "N/A"
-            rating = ratings[i].text if i < len(ratings) else "N/A"
-            product_data.append([title, price, rating])
+            product_data.append([title, price])
 
         # Close the driver
         driver.quit()
 
         # Return fetched data
-        print(product_data)
         return product_data
     
     except TimeoutException as e:
@@ -67,4 +61,4 @@ def scrape_product_data():
 
     return None # Return None if an error occurs
         
-scrape_product_data()
+print(scrape_product_data()) # Test the function

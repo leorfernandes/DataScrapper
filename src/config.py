@@ -1,10 +1,17 @@
 # URL to scrap data
-URL = "https://www.amazon.ca/s?k=TV"
+URL = "http://example.com/products"
 
-# Alert threshold value
-ALERT_THRESHOLD = 200
+# HTML Selectors
+SELECTORS = {
+    "title": ".a-size-base-plus.a-spacing-none.a-color-base.a-text-normal",
+    "price_whole": ".a-price-whole",
+    "price_cents": ".a-price-fraction",
+}
+
+# Timeout to load the page
+TIMEOUT = 10
 
 # Recipient Email
-RECIPIENT_PHONE = "+16043677294"
+CSV_FILE_PATH = "../data/product_data.csv"
 
 
