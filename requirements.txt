@@ -1,4 +1,4 @@
 # For Scrapping
-Selenium
-Webdriver_manager
-Pandas
+selenium>=4.0.0
+webdriver-manager>=3.8.0
+pandas
